@@ -1,0 +1,179 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+  <!--
+    One restrained palette. The UI itself is monochrome; colour is reserved for the data
+    (scores and severities) so it actually means something when it shows up.
+  -->
+
+  <FontFamily x:Key="MonoFont">Cascadia Mono, Consolas, Menlo, monospace</FontFamily>
+
+  <ResourceDictionary.ThemeDictionaries>
+
+    <!-- ─────────────────────────────── Dark ─────────────────────────────── -->
+    <ResourceDictionary x:Key="Dark">
+      <SolidColorBrush x:Key="AppBgBrush">#121313</SolidColorBrush>
+      <SolidColorBrush x:Key="SurfaceBrush">#181A1A</SolidColorBrush>
+      <SolidColorBrush x:Key="SurfaceAltBrush">#1F2222</SolidColorBrush>
+      <SolidColorBrush x:Key="SurfaceHoverBrush">#232626</SolidColorBrush>
+      <SolidColorBrush x:Key="SunkenBrush">#0E0F0F</SolidColorBrush>
+      <SolidColorBrush x:Key="LineBrush">#2A2D2D</SolidColorBrush>
+      <SolidColorBrush x:Key="LineStrongBrush">#3B3F3F</SolidColorBrush>
+      <SolidColorBrush x:Key="InkBrush">#ECEAE3</SolidColorBrush>
+      <SolidColorBrush x:Key="InkSoftBrush">#B5B2A9</SolidColorBrush>
+      <SolidColorBrush x:Key="InkMutedBrush">#7E7C75</SolidColorBrush>
+      <SolidColorBrush x:Key="AccentBgBrush">#ECEAE3</SolidColorBrush>
+      <SolidColorBrush x:Key="AccentFgBrush">#121313</SolidColorBrush>
+      <SolidColorBrush x:Key="AccentHoverBrush">#FFFFFF</SolidColorBrush>
+      <SolidColorBrush x:Key="GoodBrush">#5FB98B</SolidColorBrush>
+      <SolidColorBrush x:Key="FairBrush">#D8A94B</SolidColorBrush>
+      <SolidColorBrush x:Key="PoorBrush">#E27562</SolidColorBrush>
+      <SolidColorBrush x:Key="GoodSoftBrush">#265FB98B</SolidColorBrush>
+      <SolidColorBrush x:Key="FairSoftBrush">#26D8A94B</SolidColorBrush>
+      <SolidColorBrush x:Key="PoorSoftBrush">#26E27562</SolidColorBrush>
+      <SolidColorBrush x:Key="SynKeywordBrush">#569CD6</SolidColorBrush>
+      <SolidColorBrush x:Key="SynControlBrush">#C586C0</SolidColorBrush>
+      <SolidColorBrush x:Key="SynTypeBrush">#4EC9B0</SolidColorBrush>
+      <SolidColorBrush x:Key="SynFunctionBrush">#DCDCAA</SolidColorBrush>
+      <SolidColorBrush x:Key="SynStringBrush">#CE9178</SolidColorBrush>
+      <SolidColorBrush x:Key="SynNumberBrush">#B5CEA8</SolidColorBrush>
+      <SolidColorBrush x:Key="SynCommentBrush">#6A9955</SolidColorBrush>
+      <SolidColorBrush x:Key="SynPropertyBrush">#9CDCFE</SolidColorBrush>
+      <SolidColorBrush x:Key="SynTagBrush">#569CD6</SolidColorBrush>
+      <SolidColorBrush x:Key="SynAttributeBrush">#9CDCFE</SolidColorBrush>
+      <SolidColorBrush x:Key="ScrimBrush">#B0000000</SolidColorBrush>
+
+      <Color x:Key="SystemAccentColor">#ECEAE3</Color>
+      <Color x:Key="SystemAccentColorLight1">#ECEAE3</Color>
+      <Color x:Key="SystemAccentColorLight2">#ECEAE3</Color>
+      <Color x:Key="SystemAccentColorLight3">#ECEAE3</Color>
+      <Color x:Key="SystemAccentColorDark1">#B5B2A9</Color>
+      <Color x:Key="SystemAccentColorDark2">#B5B2A9</Color>
+      <Color x:Key="SystemAccentColorDark3">#B5B2A9</Color>
+
+      <SolidColorBrush x:Key="TextControlBackground">Transparent</SolidColorBrush>
+      <SolidColorBrush x:Key="TextControlBackgroundPointerOver">Transparent</SolidColorBrush>
+      <SolidColorBrush x:Key="TextControlBackgroundFocused">Transparent</SolidColorBrush>
+      <SolidColorBrush x:Key="TextControlBorderBrush">#3B3F3F</SolidColorBrush>
+      <SolidColorBrush x:Key="TextControlBorderBrushPointerOver">#7E7C75</SolidColorBrush>
+      <SolidColorBrush x:Key="TextControlBorderBrushFocused">#B5B2A9</SolidColorBrush>
+      <SolidColorBrush x:Key="TextControlForeground">#ECEAE3</SolidColorBrush>
+      <SolidColorBrush x:Key="TextControlForegroundPointerOver">#ECEAE3</SolidColorBrush>
+      <SolidColorBrush x:Key="TextControlForegroundFocused">#ECEAE3</SolidColorBrush>
+      <SolidColorBrush x:Key="TextControlPlaceholderForeground">#7E7C75</SolidColorBrush>
+      <SolidColorBrush x:Key="TextControlPlaceholderForegroundPointerOver">#7E7C75</SolidColorBrush>
+      <SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused">#7E7C75</SolidColorBrush>
+
+      <SolidColorBrush x:Key="ComboBoxBackground">#1F2222</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxBackgroundPointerOver">#232626</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxBackgroundPressed">#232626</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxBackgroundFocused">#1F2222</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxBorderBrush">#3B3F3F</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxBorderBrushPointerOver">#7E7C75</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxBorderBrushPressed">#B5B2A9</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxBorderBrushFocused">#B5B2A9</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxForeground">#ECEAE3</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxForegroundFocused">#ECEAE3</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxPlaceHolderForeground">#7E7C75</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxDropDownBackground">#1F2222</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxDropDownBorderBrush">#3B3F3F</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxDropDownGlyphForeground">#7E7C75</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxItemBackgroundPointerOver">#2B2F2F</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxItemBackgroundSelected">#272B2B</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxItemBackgroundSelectedPointerOver">#2B2F2F</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxItemBackgroundPressed">#272B2B</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxItemBackgroundSelectedPressed">#272B2B</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxItemForegroundSelected">#ECEAE3</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxItemForegroundPointerOver">#ECEAE3</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxItemForegroundSelectedPointerOver">#ECEAE3</SolidColorBrush>
+
+      <SolidColorBrush x:Key="ToolTipBackground">#2B2F2F</SolidColorBrush>
+      <SolidColorBrush x:Key="ToolTipForeground">#ECEAE3</SolidColorBrush>
+      <SolidColorBrush x:Key="ToolTipBorderBrush">#3B3F3F</SolidColorBrush>
+    </ResourceDictionary>
+
+    <!-- ─────────────────────────────── Light ────────────────────────────── -->
+    <ResourceDictionary x:Key="Light">
+      <SolidColorBrush x:Key="AppBgBrush">#F3F2EE</SolidColorBrush>
+      <SolidColorBrush x:Key="SurfaceBrush">#FBFAF8</SolidColorBrush>
+      <SolidColorBrush x:Key="SurfaceAltBrush">#FFFFFF</SolidColorBrush>
+      <SolidColorBrush x:Key="SurfaceHoverBrush">#F1EFEA</SolidColorBrush>
+      <SolidColorBrush x:Key="SunkenBrush">#F0EEE9</SolidColorBrush>
+      <SolidColorBrush x:Key="LineBrush">#E3E1DA</SolidColorBrush>
+      <SolidColorBrush x:Key="LineStrongBrush">#CFCCC2</SolidColorBrush>
+      <SolidColorBrush x:Key="InkBrush">#1B1B19</SolidColorBrush>
+      <SolidColorBrush x:Key="InkSoftBrush">#55534C</SolidColorBrush>
+      <SolidColorBrush x:Key="InkMutedBrush">#8B887F</SolidColorBrush>
+      <SolidColorBrush x:Key="AccentBgBrush">#1B1B19</SolidColorBrush>
+      <SolidColorBrush x:Key="AccentFgBrush">#FBFAF8</SolidColorBrush>
+      <SolidColorBrush x:Key="AccentHoverBrush">#000000</SolidColorBrush>
+      <SolidColorBrush x:Key="GoodBrush">#2C8A5F</SolidColorBrush>
+      <SolidColorBrush x:Key="FairBrush">#A8760B</SolidColorBrush>
+      <SolidColorBrush x:Key="PoorBrush">#C0462F</SolidColorBrush>
+      <SolidColorBrush x:Key="GoodSoftBrush">#1A2C8A5F</SolidColorBrush>
+      <SolidColorBrush x:Key="FairSoftBrush">#1AA8760B</SolidColorBrush>
+      <SolidColorBrush x:Key="PoorSoftBrush">#1AC0462F</SolidColorBrush>
+      <SolidColorBrush x:Key="SynKeywordBrush">#0000FF</SolidColorBrush>
+      <SolidColorBrush x:Key="SynControlBrush">#AF00DB</SolidColorBrush>
+      <SolidColorBrush x:Key="SynTypeBrush">#267F99</SolidColorBrush>
+      <SolidColorBrush x:Key="SynFunctionBrush">#795E26</SolidColorBrush>
+      <SolidColorBrush x:Key="SynStringBrush">#A31515</SolidColorBrush>
+      <SolidColorBrush x:Key="SynNumberBrush">#098658</SolidColorBrush>
+      <SolidColorBrush x:Key="SynCommentBrush">#008000</SolidColorBrush>
+      <SolidColorBrush x:Key="SynPropertyBrush">#001080</SolidColorBrush>
+      <SolidColorBrush x:Key="SynTagBrush">#800000</SolidColorBrush>
+      <SolidColorBrush x:Key="SynAttributeBrush">#E50000</SolidColorBrush>
+      <SolidColorBrush x:Key="ScrimBrush">#80201F1B</SolidColorBrush>
+
+      <Color x:Key="SystemAccentColor">#1B1B19</Color>
+      <Color x:Key="SystemAccentColorLight1">#55534C</Color>
+      <Color x:Key="SystemAccentColorLight2">#55534C</Color>
+      <Color x:Key="SystemAccentColorLight3">#55534C</Color>
+      <Color x:Key="SystemAccentColorDark1">#1B1B19</Color>
+      <Color x:Key="SystemAccentColorDark2">#1B1B19</Color>
+      <Color x:Key="SystemAccentColorDark3">#1B1B19</Color>
+
+      <SolidColorBrush x:Key="TextControlBackground">Transparent</SolidColorBrush>
+      <SolidColorBrush x:Key="TextControlBackgroundPointerOver">Transparent</SolidColorBrush>
+      <SolidColorBrush x:Key="TextControlBackgroundFocused">Transparent</SolidColorBrush>
+      <SolidColorBrush x:Key="TextControlBorderBrush">#CFCCC2</SolidColorBrush>
+      <SolidColorBrush x:Key="TextControlBorderBrushPointerOver">#8B887F</SolidColorBrush>
+      <SolidColorBrush x:Key="TextControlBorderBrushFocused">#55534C</SolidColorBrush>
+      <SolidColorBrush x:Key="TextControlForeground">#1B1B19</SolidColorBrush>
+      <SolidColorBrush x:Key="TextControlForegroundPointerOver">#1B1B19</SolidColorBrush>
+      <SolidColorBrush x:Key="TextControlForegroundFocused">#1B1B19</SolidColorBrush>
+      <SolidColorBrush x:Key="TextControlPlaceholderForeground">#8B887F</SolidColorBrush>
+      <SolidColorBrush x:Key="TextControlPlaceholderForegroundPointerOver">#8B887F</SolidColorBrush>
+      <SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused">#8B887F</SolidColorBrush>
+
+      <SolidColorBrush x:Key="ComboBoxBackground">#FFFFFF</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxBackgroundPointerOver">#FFFFFF</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxBackgroundPressed">#FFFFFF</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxBackgroundFocused">#FFFFFF</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxBorderBrush">#CFCCC2</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxBorderBrushPointerOver">#8B887F</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxBorderBrushPressed">#55534C</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxBorderBrushFocused">#55534C</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxForeground">#1B1B19</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxForegroundFocused">#1B1B19</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxPlaceHolderForeground">#8B887F</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxDropDownBackground">#FFFFFF</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxDropDownBorderBrush">#CFCCC2</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxDropDownGlyphForeground">#8B887F</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxItemBackgroundPointerOver">#F1EFEA</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxItemBackgroundSelected">#F3F2EE</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxItemBackgroundSelectedPointerOver">#F1EFEA</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxItemBackgroundPressed">#F3F2EE</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxItemBackgroundSelectedPressed">#F3F2EE</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxItemForegroundSelected">#1B1B19</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxItemForegroundPointerOver">#1B1B19</SolidColorBrush>
+      <SolidColorBrush x:Key="ComboBoxItemForegroundSelectedPointerOver">#1B1B19</SolidColorBrush>
+
+      <SolidColorBrush x:Key="ToolTipBackground">#FFFFFF</SolidColorBrush>
+      <SolidColorBrush x:Key="ToolTipForeground">#1B1B19</SolidColorBrush>
+      <SolidColorBrush x:Key="ToolTipBorderBrush">#CFCCC2</SolidColorBrush>
+    </ResourceDictionary>
+
+  </ResourceDictionary.ThemeDictionaries>
+
+</ResourceDictionary>

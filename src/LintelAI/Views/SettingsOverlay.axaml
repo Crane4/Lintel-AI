@@ -1,0 +1,70 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:LintelAI.ViewModels"
+             x:Class="LintelAI.Views.SettingsOverlay"
+             x:DataType="vm:MainViewModel">
+
+  <Grid>
+    <Button Classes="scrim" Command="{Binding CloseSettingsCommand}" />
+
+    <Border Classes="panel" Width="460"
+            HorizontalAlignment="Center" VerticalAlignment="Center"
+            Background="{DynamicResource SurfaceBrush}"
+            BorderBrush="{DynamicResource LineStrongBrush}">
+      <StackPanel>
+
+        <Grid ColumnDefinitions="*,Auto" Margin="24,18,14,16">
+          <TextBlock Text="Settings" Classes="title" VerticalAlignment="Center" />
+          <Button Grid.Column="1" Classes="ghost icon" Command="{Binding CloseSettingsCommand}">
+            <PathIcon Data="{x:Static vm:Icons.Close}" Width="14" Height="14" />
+          </Button>
+        </Grid>
+        <Border Classes="hairline-b" Height="1" />
+
+        <StackPanel Margin="24,20,24,8" Spacing="20">
+
+          <StackPanel Spacing="6">
+            <TextBlock Text="Ollama address" FontWeight="SemiBold" />
+            <TextBox Text="{Binding UrlInput}" Watermark="http://localhost:11434" />
+            <TextBlock Classes="muted small" Text="Change this if Ollama runs on another machine or port." />
+          </StackPanel>
+
+          <StackPanel Spacing="6">
+            <TextBlock Text="Characters read per file" FontWeight="SemiBold" />
+            <NumericUpDown Value="{Binding MaxCharsInput}" Minimum="1000" Maximum="100000" Increment="1000"
+                           FormatString="N0" />
+            <TextBlock Classes="muted small" TextWrapping="Wrap"
+                       Text="Longer files are cut off here before being sent. Bigger values are slower and need a model with a large context window." />
+          </StackPanel>
+
+          <StackPanel Spacing="6">
+            <TextBlock Text="Time limit per file (seconds)" FontWeight="SemiBold" />
+            <NumericUpDown Value="{Binding TimeoutInput}" Minimum="15" Maximum="1800" Increment="15"
+                           FormatString="N0" />
+            <TextBlock Classes="muted small" Text="Slow machines running large models may want this higher." />
+          </StackPanel>
+
+          <StackPanel Spacing="8">
+            <TextBlock Text="Updates" FontWeight="SemiBold" />
+            <CheckBox IsChecked="{Binding CheckUpdatesInput}"
+                      Content="Look for a newer version when the app starts" />
+            <TextBlock Classes="muted small" TextWrapping="Wrap"
+                       Text="This only asks GitHub for the latest release number. Nothing about your files or computer is sent, and nothing is installed for you." />
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <Button Classes="secondary" Padding="12,6" Command="{Binding CheckForUpdatesNowCommand}"
+                      IsEnabled="{Binding !IsCheckingUpdates}" Content="Check now" />
+              <TextBlock Text="{Binding CurrentVersionText}" Classes="muted small mono" VerticalAlignment="Center" />
+            </StackPanel>
+          </StackPanel>
+
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" Margin="24,12,24,22">
+          <Button Classes="secondary" Content="Cancel" Command="{Binding CloseSettingsCommand}" />
+          <Button Classes="primary" Content="Save" Command="{Binding SaveSettingsCommand}" />
+        </StackPanel>
+
+      </StackPanel>
+    </Border>
+  </Grid>
+</UserControl>

@@ -1,0 +1,114 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:LintelAI.ViewModels"
+             x:Class="LintelAI.Views.HistoryOverlay"
+             x:DataType="vm:MainViewModel">
+
+  <Grid>
+    <Button Classes="scrim" Command="{Binding CloseHistoryCommand}" />
+
+    <Border Classes="panel" Width="860" Height="560"
+            HorizontalAlignment="Center" VerticalAlignment="Center"
+            Background="{DynamicResource SurfaceBrush}"
+            BorderBrush="{DynamicResource LineStrongBrush}"
+            ClipToBounds="True">
+      <Grid RowDefinitions="Auto,*">
+
+        <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="24,18,14,16">
+          <StackPanel Spacing="2">
+            <TextBlock Text="History" Classes="title" />
+            <TextBlock Text="The last 30 completed runs, newest first." Classes="muted small" />
+          </StackPanel>
+          <Button Grid.Column="1" Classes="ghost icon" Command="{Binding CloseHistoryCommand}">
+            <PathIcon Data="{x:Static vm:Icons.Close}" Width="14" Height="14" />
+          </Button>
+        </Grid>
+        <Border Grid.Row="0" Classes="hairline-b" VerticalAlignment="Bottom" Height="1" />
+
+        <!-- Empty -->
+        <StackPanel Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="4"
+                    IsVisible="{Binding HistoryEmpty}">
+          <TextBlock Text="Nothing here yet" Classes="title" HorizontalAlignment="Center" />
+          <TextBlock Text="Finished analyses are saved automatically." Classes="muted" HorizontalAlignment="Center" />
+        </StackPanel>
+
+        <Grid Grid.Row="1" ColumnDefinitions="320,*" IsVisible="{Binding !HistoryEmpty}">
+
+          <Border Classes="hairline-r">
+            <ListBox Classes="rows" ItemsSource="{Binding History}" SelectedItem="{Binding SelectedHistory}" Margin="8">
+              <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="vm:HistoryEntryViewModel">
+                  <Grid ColumnDefinitions="*,Auto" Margin="12,10">
+                    <StackPanel Spacing="2">
+                      <TextBlock Text="{Binding FolderName}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                      <TextBlock Text="{Binding DateText}" Classes="muted tiny" />
+                      <TextBlock Text="{Binding MetaText}" Classes="muted tiny" TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                    <TextBlock Grid.Column="1" Text="{Binding ScoreText}" FontSize="20" FontWeight="SemiBold"
+                               VerticalAlignment="Center" Margin="12,0,0,0"
+                               Classes.good="{Binding IsGood}" Classes.fair="{Binding IsFair}" Classes.poor="{Binding IsPoor}" />
+                  </Grid>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+          </Border>
+
+          <Grid Grid.Column="1" RowDefinitions="Auto,*" Margin="24,18,24,18" IsVisible="{Binding SelectedHistory, Converter={x:Static ObjectConverters.IsNotNull}}">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+            <StackPanel Spacing="4">
+              <TextBlock Text="{Binding SelectedHistory.FolderName}" FontSize="16" FontWeight="SemiBold" />
+              <TextBlock Text="{Binding SelectedHistory.Folder}" Classes="muted tiny mono" TextTrimming="CharacterEllipsis" />
+              <TextBlock Classes="muted small" Margin="0,6,0,0">
+                <Run Text="{Binding SelectedHistory.DateText}" /><Run Text="  ·  " /><Run Text="{Binding SelectedHistory.MetaText}" />
+              </TextBlock>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Spacing="6" VerticalAlignment="Top" MaxWidth="190">
+              <Button Classes="secondary" HorizontalAlignment="Stretch"
+                      Command="{Binding OpenSelectedRunCommand}"
+                      Content="Open this run" />
+              <TextBlock Classes="muted tiny" TextWrapping="Wrap"
+                         IsVisible="{Binding !SelectedHistory.HasDetails}"
+                         Text="Saved by an older version, so only its scores were kept." />
+            </StackPanel>
+            </Grid>
+
+            <Grid Grid.Row="1" RowDefinitions="Auto,*" Margin="0,18,0,0">
+              <TextBlock Classes="muted" IsVisible="{Binding !HasComparison}" TextWrapping="Wrap"
+                         Text="Analyze a project to see how each file's score moved since this run." />
+
+              <Grid Grid.Row="1" RowDefinitions="Auto,*" IsVisible="{Binding HasComparison}">
+                <Grid ColumnDefinitions="*,64,64,64" Margin="12,0,12,8">
+                  <TextBlock Classes="eyebrow" Text="FILE" />
+                  <TextBlock Grid.Column="1" Classes="eyebrow" Text="THEN" HorizontalAlignment="Right" />
+                  <TextBlock Grid.Column="2" Classes="eyebrow" Text="NOW" HorizontalAlignment="Right" />
+                  <TextBlock Grid.Column="3" Classes="eyebrow" Text="CHANGE" HorizontalAlignment="Right" />
+                </Grid>
+                <Border Grid.Row="1" Classes="panel" Background="{DynamicResource SurfaceAltBrush}" ClipToBounds="True">
+                  <ScrollViewer>
+                    <ItemsControl ItemsSource="{Binding Comparison}">
+                      <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="vm:CompareRowViewModel">
+                          <Grid ColumnDefinitions="*,64,64,64" Margin="12,8">
+                            <TextBlock Text="{Binding Path}" TextTrimming="CharacterEllipsis" Classes="small"
+                                       ToolTip.Tip="{Binding Path}" />
+                            <TextBlock Grid.Column="1" Text="{Binding ThenText}" HorizontalAlignment="Right" Classes="soft mono small" />
+                            <TextBlock Grid.Column="2" Text="{Binding NowText}" HorizontalAlignment="Right" Classes="mono small" />
+                            <TextBlock Grid.Column="3" Text="{Binding DeltaText}" HorizontalAlignment="Right"
+                                       Classes="mono small muted"
+                                       Classes.delta-up="{Binding IsUp}" Classes.delta-down="{Binding IsDown}" />
+                          </Grid>
+                        </DataTemplate>
+                      </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                  </ScrollViewer>
+                </Border>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+
+      </Grid>
+    </Border>
+  </Grid>
+</UserControl>

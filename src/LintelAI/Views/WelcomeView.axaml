@@ -1,0 +1,45 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:LintelAI.ViewModels"
+             x:Class="LintelAI.Views.WelcomeView"
+             x:DataType="vm:MainViewModel">
+
+  <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="460" Spacing="28">
+
+    <StackPanel Spacing="14">
+      <TextBlock Classes="heading" TextWrapping="Wrap"
+                 Text="Review a codebase with a model that runs on your own machine." />
+      <TextBlock Classes="soft" TextWrapping="Wrap" LineHeight="21"
+                 Text="Each file is read, checked for leaks, dead code, runaway loops and sloppy habits, then given a score. Nothing is uploaded anywhere." />
+    </StackPanel>
+
+    <Border Classes="panel" Padding="0">
+      <StackPanel>
+        <Grid ColumnDefinitions="56,*" Margin="0,16">
+          <TextBlock Text="01" Classes="muted mono" HorizontalAlignment="Center" VerticalAlignment="Center" />
+          <StackPanel Grid.Column="1" Spacing="2">
+            <TextBlock Text="Pick a model" FontWeight="SemiBold" />
+            <TextBlock Classes="muted small" Text="Anything you have pulled into Ollama will show up on the left." />
+          </StackPanel>
+        </Grid>
+        <Border Classes="hairline-b" Height="1" BorderThickness="0,0,0,1" />
+        <Grid ColumnDefinitions="56,*" Margin="0,16">
+          <TextBlock Text="02" Classes="muted mono" HorizontalAlignment="Center" VerticalAlignment="Center" />
+          <StackPanel Grid.Column="1" Spacing="2">
+            <TextBlock Text="Choose a project folder" FontWeight="SemiBold" />
+            <TextBlock Classes="muted small" Text="Subfolders are scanned too, minus the usual build output." />
+          </StackPanel>
+        </Grid>
+        <Border Classes="hairline-b" Height="1" BorderThickness="0,0,0,1" />
+        <Grid ColumnDefinitions="56,*" Margin="0,16">
+          <TextBlock Text="03" Classes="muted mono" HorizontalAlignment="Center" VerticalAlignment="Center" />
+          <StackPanel Grid.Column="1" Spacing="2">
+            <TextBlock Text="Analyze" FontWeight="SemiBold" />
+            <TextBlock Classes="muted small" Text="Results appear file by file, so you can start reading straight away." />
+          </StackPanel>
+        </Grid>
+      </StackPanel>
+    </Border>
+
+  </StackPanel>
+</UserControl>

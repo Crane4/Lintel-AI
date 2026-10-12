@@ -1,0 +1,26 @@
+## .NET / Visual Studio
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.userprefs
+*.DotSettings.user
+
+## Build output
+[Dd]ebug/
+[Rr]elease/
+publish/
+artifacts/
+*.nupkg
+
+## Test results
+TestResults/
+*.trx
+coverage*.xml
+
+## IDEs / OS
+.idea/
+.vscode/
+Thumbs.db
+.DS_Store

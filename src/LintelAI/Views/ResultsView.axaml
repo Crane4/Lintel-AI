@@ -1,0 +1,57 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:LintelAI.ViewModels"
+             xmlns:v="using:LintelAI.Views"
+             x:Class="LintelAI.Views.ResultsView"
+             x:DataType="vm:MainViewModel">
+
+  <Grid RowDefinitions="Auto,*" Margin="24,22,24,24" RowSpacing="18">
+
+    <!-- Summary strip -->
+    <Border Grid.Row="0" Classes="panel">
+      <Grid ColumnDefinitions="*,Auto,*,Auto,*,Auto,1.4*">
+
+        <StackPanel Grid.Column="0" Margin="22,16" Spacing="4">
+          <TextBlock Classes="eyebrow" Text="FILES" />
+          <TextBlock Classes="stat" Text="{Binding DoneText}" />
+          <TextBlock Classes="muted small" Text="analyzed" />
+        </StackPanel>
+
+        <Border Grid.Column="1" Classes="divider-v" Margin="0,14" />
+
+        <StackPanel Grid.Column="2" Margin="22,16" Spacing="4">
+          <TextBlock Classes="eyebrow" Text="ISSUES" />
+          <TextBlock Classes="stat" Text="{Binding TotalIssues}" />
+          <TextBlock Classes="muted small"
+                     Text="{Binding HighIssues, StringFormat='{}{0} high severity'}" />
+        </StackPanel>
+
+        <Border Grid.Column="3" Classes="divider-v" Margin="0,14" />
+
+        <StackPanel Grid.Column="4" Margin="22,16" Spacing="4">
+          <TextBlock Classes="eyebrow" Text="AVERAGE SCORE" />
+          <TextBlock Classes="stat" Text="{Binding AverageScoreText}"
+                     Classes.good="{Binding AverageIsGood}"
+                     Classes.fair="{Binding AverageIsFair}"
+                     Classes.poor="{Binding AverageIsPoor}" />
+          <TextBlock Classes="muted small" Text="out of 100" />
+        </StackPanel>
+
+        <Border Grid.Column="5" Classes="divider-v" Margin="0,14" />
+
+        <StackPanel Grid.Column="6" Margin="22,16" Spacing="4" VerticalAlignment="Center">
+          <TextBlock Classes="eyebrow" Text="PROJECT" />
+          <TextBlock Text="{Binding FolderName}" FontSize="15" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+          <TextBlock Text="{Binding SelectedModel}" Classes="muted small mono" TextTrimming="CharacterEllipsis" />
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <!-- List + detail -->
+    <Grid Grid.Row="1" ColumnDefinitions="390,16,*">
+      <v:FileListView Grid.Column="0" />
+      <v:DetailView Grid.Column="2" />
+    </Grid>
+
+  </Grid>
+</UserControl>

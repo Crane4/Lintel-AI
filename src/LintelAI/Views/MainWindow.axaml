@@ -1,0 +1,171 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:LintelAI.ViewModels"
+        xmlns:v="using:LintelAI.Views"
+        x:Class="LintelAI.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Title="Lintel AI"
+        Icon="avares://LintelAI/Assets/icon.png"
+        Width="1320" Height="840"
+        MinWidth="1060" MinHeight="680"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource AppBgBrush}"
+        Foreground="{DynamicResource InkBrush}"
+        FontSize="13"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="PreferSystemChrome"
+        ExtendClientAreaTitleBarHeightHint="-1">
+
+  <Window.KeyBindings>
+    <KeyBinding Gesture="Escape" Command="{Binding CloseOverlaysCommand}" />
+    <KeyBinding Gesture="F5" Command="{Binding StartCommand}" />
+    <KeyBinding Gesture="Ctrl+O" Command="{Binding BrowseCommand}" />
+    <KeyBinding Gesture="Ctrl+H" Command="{Binding OpenHistoryCommand}" />
+    <KeyBinding Gesture="Ctrl+E" Command="{Binding ToggleExportCommand}" />
+    <KeyBinding Gesture="Ctrl+OemComma" Command="{Binding OpenSettingsCommand}" />
+  </Window.KeyBindings>
+
+  <Grid>
+
+    <Grid RowDefinitions="Auto,Auto,*">
+
+      <!-- ── Header ────────────────────────────────────────────────── -->
+      <Border Name="Header" Grid.Row="0" Height="52"
+              Classes="hairline-b"
+              Background="{DynamicResource SurfaceBrush}">
+        <Grid Name="HeaderLayout" ColumnDefinitions="Auto,*,Auto" Margin="20,0,150,0">
+
+          <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+            <!-- Mark: four lines of "code", the second indented -->
+            <StackPanel Spacing="3" VerticalAlignment="Center">
+              <Border Width="18" Height="3" CornerRadius="1.5" Background="{DynamicResource InkBrush}" />
+              <Border Width="12" Height="3" CornerRadius="1.5" Margin="6,0,0,0" Background="{DynamicResource InkBrush}" />
+              <Border Width="16" Height="3" CornerRadius="1.5" Background="{DynamicResource InkBrush}" />
+              <Border Width="8" Height="3" CornerRadius="1.5" Background="{DynamicResource PoorBrush}" />
+            </StackPanel>
+            <TextBlock Text="Lintel AI" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center" />
+          </StackPanel>
+
+          <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+
+            <Button Classes="ghost" Command="{Binding RefreshModelsCommand}" ToolTip.Tip="Check the Ollama connection again">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <Ellipse Width="8" Height="8" VerticalAlignment="Center"
+                         Classes.dot-online="{Binding IsOllamaOnline}"
+                         Classes.dot-offline="{Binding IsOffline}"
+                         Classes.dot-wait="{Binding IsCheckingOllama}" />
+                <TextBlock Text="{Binding OllamaStatus}" FontSize="12" VerticalAlignment="Center" />
+              </StackPanel>
+            </Button>
+
+            <Border Classes="divider-v" Height="18" Margin="6,0" />
+
+            <Button Classes="ghost" Command="{Binding OpenHistoryCommand}" ToolTip.Tip="History  (Ctrl+H)">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <PathIcon Data="{x:Static vm:Icons.History}" Width="15" Height="15" />
+                <TextBlock Text="History" />
+              </StackPanel>
+            </Button>
+
+            <Button Name="ExportButton" Classes="ghost"
+                    Command="{Binding ToggleExportCommand}"
+                    ToolTip.Tip="Export  (Ctrl+E)"
+                    IsEnabled="{Binding HasResults}">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <PathIcon Data="{x:Static vm:Icons.Download}" Width="15" Height="15" />
+                <TextBlock Text="Export" />
+              </StackPanel>
+            </Button>
+
+            <Button Classes="ghost icon" Command="{Binding OpenSettingsCommand}" ToolTip.Tip="Settings  (Ctrl+,)">
+              <PathIcon Data="{x:Static vm:Icons.Settings}" Width="16" Height="16" />
+            </Button>
+
+            <Button Classes="ghost icon" Command="{Binding CycleThemeCommand}" ToolTip.Tip="{Binding ThemeTooltip}">
+              <PathIcon Data="{Binding ThemeIcon}" Width="16" Height="16" />
+            </Button>
+          </StackPanel>
+        </Grid>
+      </Border>
+
+      <!-- ── Update notice: informational only, nothing is installed for you ── -->
+      <Border Grid.Row="1" IsVisible="{Binding IsUpdateBannerVisible}"
+              Classes="hairline-b" Background="{DynamicResource SurfaceAltBrush}">
+        <Grid ColumnDefinitions="Auto,*,Auto" Margin="20,10,14,10" ColumnSpacing="12">
+          <Border Width="3" CornerRadius="2" VerticalAlignment="Stretch" Classes="good" />
+          <StackPanel Grid.Column="1" Spacing="1" VerticalAlignment="Center">
+            <TextBlock Text="{Binding UpdateTitle}" FontWeight="SemiBold" />
+            <TextBlock Text="{Binding UpdateDetail}" Classes="muted small" />
+          </StackPanel>
+          <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+            <Button Classes="secondary" Padding="12,6" Command="{Binding OpenUpdatePageCommand}"
+                    ToolTip.Tip="Opens the release page in your browser">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <PathIcon Data="{x:Static vm:Icons.Download}" Width="14" Height="14" />
+                <TextBlock Text="View release" />
+              </StackPanel>
+            </Button>
+            <Button Classes="ghost" Command="{Binding SkipUpdateCommand}" Content="Skip this version" />
+            <Button Classes="ghost" Command="{Binding StopUpdateNoticesCommand}" Content="Don't show again"
+                    ToolTip.Tip="Stop checking for updates. You can turn this back on in Settings." />
+            <Button Classes="ghost icon" Command="{Binding DismissUpdateCommand}" ToolTip.Tip="Dismiss">
+              <PathIcon Data="{x:Static vm:Icons.Close}" Width="13" Height="13" />
+            </Button>
+          </StackPanel>
+        </Grid>
+      </Border>
+
+      <!-- ── Body ──────────────────────────────────────────────────── -->
+      <Grid Grid.Row="2" ColumnDefinitions="304,*">
+
+        <Border Grid.Column="0" Classes="hairline-r" Background="{DynamicResource SurfaceBrush}">
+          <v:SidebarView />
+        </Border>
+
+        <Grid Grid.Column="1">
+          <v:WelcomeView IsVisible="{Binding NoResults}" />
+          <v:ResultsView IsVisible="{Binding HasResults}" />
+        </Grid>
+      </Grid>
+    </Grid>
+
+    <!-- Export menu -->
+    <Popup IsOpen="{Binding IsExportOpen, Mode=TwoWay}"
+           PlacementTarget="{Binding #ExportButton}"
+           Placement="BottomEdgeAlignedRight"
+           VerticalOffset="6"
+           IsLightDismissEnabled="True">
+      <Border Classes="panel" Background="{DynamicResource SurfaceAltBrush}"
+              BorderBrush="{DynamicResource LineStrongBrush}" Padding="6" CornerRadius="10">
+        <StackPanel MinWidth="190" Spacing="2">
+          <Button Classes="ghost" Command="{Binding ExportJsonCommand}"
+                  HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Content="JSON report" />
+          <Button Classes="ghost" Command="{Binding ExportMarkdownCommand}"
+                  HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Content="Markdown report" />
+        </StackPanel>
+      </Border>
+    </Popup>
+
+    <!-- Overlays -->
+    <v:HistoryOverlay IsVisible="{Binding IsHistoryOpen}" />
+    <v:SettingsOverlay IsVisible="{Binding IsSettingsOpen}" />
+
+    <!-- Toast -->
+    <Border HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,28"
+            Classes="toast panel"
+            Classes.visible="{Binding IsToastVisible}"
+            IsHitTestVisible="{Binding IsToastVisible}"
+            Background="{DynamicResource SurfaceAltBrush}"
+            BorderBrush="{DynamicResource LineStrongBrush}"
+            MaxWidth="560" Padding="16,12">
+      <StackPanel Orientation="Horizontal" Spacing="10">
+        <Border Width="3" CornerRadius="2" VerticalAlignment="Stretch"
+                Classes.mark-high="{Binding IsToastError}"
+                Classes.good="{Binding IsToastSuccess}"
+                Classes.mark-low="{Binding !IsToastError}" />
+        <TextBlock Text="{Binding ToastText}" TextWrapping="Wrap" VerticalAlignment="Center" />
+      </StackPanel>
+    </Border>
+
+  </Grid>
+</Window>

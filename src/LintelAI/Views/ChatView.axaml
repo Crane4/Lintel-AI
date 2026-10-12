@@ -1,0 +1,137 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:LintelAI.ViewModels"
+             xmlns:c="using:LintelAI.Controls"
+             x:Class="LintelAI.Views.ChatView"
+             x:DataType="vm:ChatViewModel">
+
+  <Grid RowDefinitions="*,Auto">
+
+    <!-- Conversation -->
+    <Panel Grid.Row="0">
+
+      <!-- Empty state with a few starting points -->
+      <StackPanel IsVisible="{Binding IsEmpty}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                  Spacing="16" Width="380">
+        <StackPanel Spacing="4">
+          <TextBlock Text="Ask about this file" Classes="title" HorizontalAlignment="Center" />
+          <TextBlock Text="The model already has the file and its findings in front of it."
+                     Classes="muted" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" />
+        </StackPanel>
+        <ItemsControl ItemsSource="{Binding Suggestions}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate><StackPanel Spacing="8" /></ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="x:String">
+              <Button Classes="card"
+                      Command="{Binding $parent[ItemsControl].((vm:ChatViewModel)DataContext).AskCommand}"
+                      CommandParameter="{Binding}">
+                <TextBlock Text="{Binding}" Classes="soft" TextWrapping="Wrap" />
+              </Button>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+
+      <ScrollViewer Name="Scroller" IsVisible="{Binding !IsEmpty}">
+        <ItemsControl ItemsSource="{Binding Messages}" Margin="24,20,24,12">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate><StackPanel Spacing="22" /></ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:ChatMessageViewModel">
+              <StackPanel Spacing="8">
+                <TextBlock Classes="eyebrow" Text="YOU" IsVisible="{Binding IsUser}" />
+                <TextBlock Classes="eyebrow" Text="MODEL" IsVisible="{Binding IsAssistant}" />
+
+                <!-- Waiting for the first token -->
+                <StackPanel Orientation="Horizontal" Spacing="8" IsVisible="{Binding IsWaiting}">
+                  <Ellipse Width="8" Height="8" Classes="pulse dot-wait" />
+                  <TextBlock Text="Thinking…" Classes="muted" />
+                </StackPanel>
+
+                <Border Classes="bubble-error" Padding="12,10" IsVisible="{Binding IsError}">
+                  <TextBlock Text="{Binding Raw}" TextWrapping="Wrap" />
+                </Border>
+
+                <ItemsControl ItemsSource="{Binding Segments}" IsVisible="{Binding !IsError}">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate><StackPanel Spacing="10" /></ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+                  <ItemsControl.DataTemplates>
+
+                    <DataTemplate DataType="vm:ProseSegmentViewModel" x:DataType="vm:ProseSegmentViewModel">
+                      <c:RichText Markdown="{Binding Text}" LineHeight="21" />
+                    </DataTemplate>
+
+                    <DataTemplate DataType="vm:CodeSegmentViewModel" x:DataType="vm:CodeSegmentViewModel">
+                      <Border Background="{DynamicResource SunkenBrush}"
+                              BorderBrush="{DynamicResource LineBrush}" BorderThickness="1"
+                              CornerRadius="9" ClipToBounds="True">
+                        <Grid RowDefinitions="Auto,Auto">
+                          <Grid ColumnDefinitions="*,Auto" Margin="14,6,6,6">
+                            <TextBlock Text="{Binding Language}" Classes="muted tiny mono"
+                                       VerticalAlignment="Center" IsVisible="{Binding HasLanguage}" />
+                            <Button Grid.Column="1" Classes="ghost" Padding="8,4" Command="{Binding CopyCommand}">
+                              <StackPanel Orientation="Horizontal" Spacing="6">
+                                <PathIcon Data="{x:Static vm:Icons.Copy}" Width="12" Height="12" IsVisible="{Binding !JustCopied}" />
+                                <PathIcon Data="{x:Static vm:Icons.Check}" Width="12" Height="12" IsVisible="{Binding JustCopied}" />
+                                <TextBlock Text="Copy" FontSize="11" IsVisible="{Binding !JustCopied}" />
+                                <TextBlock Text="Copied" FontSize="11" IsVisible="{Binding JustCopied}" />
+                              </StackPanel>
+                            </Button>
+                          </Grid>
+                          <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+                            <c:CodeText Code="{Binding Text}" Language="{Binding HighlightLanguage}"
+                                        FontFamily="{StaticResource MonoFont}" FontSize="12"
+                                        Margin="14,2,14,14" TextWrapping="NoWrap" />
+                          </ScrollViewer>
+                        </Grid>
+                      </Border>
+                    </DataTemplate>
+
+                  </ItemsControl.DataTemplates>
+                </ItemsControl>
+              </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </ScrollViewer>
+    </Panel>
+
+    <!-- Composer -->
+    <Border Grid.Row="1" Classes="hairline-b" BorderThickness="0,1,0,0" Padding="20,14">
+      <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+        <TextBox Name="Composer" Grid.Column="0"
+                 Text="{Binding Input, Mode=TwoWay}"
+                 AcceptsReturn="True" TextWrapping="Wrap" MaxHeight="120"
+                 Watermark="Ask about this file…"
+                 ToolTip.Tip="Enter sends, Shift+Enter adds a new line"
+                 IsEnabled="{Binding !IsStreaming}" />
+
+        <Button Grid.Column="1" Classes="secondary" Height="38" Padding="12,0" VerticalAlignment="Bottom"
+                Command="{Binding StopCommand}" IsVisible="{Binding IsStreaming}">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <PathIcon Data="{x:Static vm:Icons.Stop}" Width="12" Height="12" />
+            <TextBlock Text="Stop" />
+          </StackPanel>
+        </Button>
+        <Button Grid.Column="1" Classes="primary" Height="38" Padding="14,0" VerticalAlignment="Bottom"
+                Command="{Binding SendCommand}" IsVisible="{Binding !IsStreaming}">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <PathIcon Data="{x:Static vm:Icons.Send}" Width="13" Height="13" />
+            <TextBlock Text="Send" />
+          </StackPanel>
+        </Button>
+
+        <Button Grid.Column="2" Classes="ghost icon" Height="38" VerticalAlignment="Bottom"
+                Command="{Binding ClearCommand}" ToolTip.Tip="Clear this conversation"
+                IsEnabled="{Binding !IsEmpty}">
+          <PathIcon Data="{x:Static vm:Icons.Clear}" Width="15" Height="15" />
+        </Button>
+      </Grid>
+    </Border>
+
+  </Grid>
+</UserControl>

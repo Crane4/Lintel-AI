@@ -1,0 +1,101 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:LintelAI.ViewModels"
+             x:Class="LintelAI.Views.SidebarView"
+             x:DataType="vm:MainViewModel">
+
+  <Grid RowDefinitions="*,Auto" Margin="20,24,20,20">
+
+    <StackPanel Grid.Row="0" Spacing="24">
+
+      <!-- Model -->
+      <StackPanel Spacing="8">
+        <TextBlock Classes="eyebrow" Text="MODEL" />
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+          <ComboBox Grid.Column="0"
+                    ItemsSource="{Binding Models}"
+                    SelectedItem="{Binding SelectedModel}"
+                    PlaceholderText="No model available" />
+          <Button Grid.Column="1" Classes="secondary icon" Width="38" Height="38"
+                  Command="{Binding RefreshModelsCommand}"
+                  ToolTip.Tip="Reload the list of models">
+            <PathIcon Data="{x:Static vm:Icons.Refresh}" Width="15" Height="15" />
+          </Button>
+        </Grid>
+      </StackPanel>
+
+      <!-- Shown only when Ollama is not on this computer -->
+      <Border IsVisible="{Binding ShowRemoteWarning}" Margin="0,-12,0,0" Padding="10,8" CornerRadius="8"
+              Background="{DynamicResource FairSoftBrush}">
+        <TextBlock TextWrapping="Wrap" Classes="small"
+                   Text="This Ollama server is not on your computer. File contents are sent over the network to it." />
+      </Border>
+
+      <!-- Project -->
+      <StackPanel Spacing="8">
+        <TextBlock Classes="eyebrow" Text="PROJECT" />
+        <Button Classes="card" Command="{Binding BrowseCommand}" ToolTip.Tip="Choose a folder  (Ctrl+O)">
+          <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+            <PathIcon Grid.Column="0" Data="{x:Static vm:Icons.Folder}" Width="18" Height="18"
+                      Foreground="{DynamicResource InkMutedBrush}" VerticalAlignment="Center" />
+            <StackPanel Grid.Column="1" Spacing="1" VerticalAlignment="Center">
+              <TextBlock Text="{Binding FolderName}" IsVisible="{Binding HasFolder}"
+                         FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+              <TextBlock Text="{Binding FolderPath}" IsVisible="{Binding HasFolder}"
+                         Classes="muted tiny" TextTrimming="CharacterEllipsis" />
+              <TextBlock Text="Choose a project folder" IsVisible="{Binding !HasFolder}"
+                         Classes="soft" />
+            </StackPanel>
+          </Grid>
+        </Button>
+      </StackPanel>
+
+      <!-- Run / stop -->
+      <Panel>
+        <Button Classes="primary" HorizontalAlignment="Stretch"
+                IsVisible="{Binding IsIdle}"
+                Command="{Binding StartCommand}"
+                ToolTip.Tip="Start  (F5)">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <PathIcon Data="{x:Static vm:Icons.Play}" Width="14" Height="14" />
+            <TextBlock Text="Analyze project" />
+          </StackPanel>
+        </Button>
+        <Button Classes="secondary" HorizontalAlignment="Stretch"
+                IsVisible="{Binding IsAnalyzing}"
+                Command="{Binding CancelCommand}">
+          <StackPanel Orientation="Horizontal" Spacing="8">
+            <PathIcon Data="{x:Static vm:Icons.Stop}" Width="13" Height="13" />
+            <TextBlock Text="Stop" />
+          </StackPanel>
+        </Button>
+      </Panel>
+
+      <!-- Progress -->
+      <StackPanel Spacing="10" IsVisible="{Binding ShowProgress}">
+        <Grid ColumnDefinitions="*,Auto">
+          <TextBlock Classes="eyebrow" Text="PROGRESS" />
+          <TextBlock Grid.Column="1" Classes="small soft" Text="{Binding ProgressText}" />
+        </Grid>
+        <ProgressBar Minimum="0" Maximum="100" Value="{Binding Progress}" />
+        <TextBlock Text="{Binding CurrentFile}" Classes="muted tiny mono" TextTrimming="CharacterEllipsis" />
+      </StackPanel>
+
+    </StackPanel>
+
+    <!-- Footnote -->
+    <StackPanel Grid.Row="1" Spacing="6">
+      <TextBlock Classes="muted tiny" TextWrapping="Wrap" LineHeight="17">
+        <Run Text="Skips node_modules, .git, bin, obj, dist, build and .env files. Add your own rules in a " />
+        <Run Text=".AIIgnore" FontFamily="{StaticResource MonoFont}" />
+        <Run Text=" file at the project root." />
+      </TextBlock>
+      <TextBlock Classes="muted tiny" IsVisible="{Binding HasIgnored}">
+        <Run Text="{Binding IgnoredCount}" />
+        <Run Text=" paths skipped by " />
+        <Run Text=".AIIgnore" FontFamily="{StaticResource MonoFont}" />
+      </TextBlock>
+    </StackPanel>
+
+  </Grid>
+</UserControl>

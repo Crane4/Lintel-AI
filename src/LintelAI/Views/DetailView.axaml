@@ -1,0 +1,206 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:LintelAI.ViewModels"
+             xmlns:v="using:LintelAI.Views"
+             xmlns:shapes="using:Avalonia.Controls.Shapes"
+             xmlns:c="using:LintelAI.Controls"
+             x:Class="LintelAI.Views.DetailView"
+             x:DataType="vm:MainViewModel">
+
+  <Border Classes="panel" ClipToBounds="True">
+    <Panel>
+
+      <!-- Nothing selected -->
+      <StackPanel IsVisible="{Binding NoSelection}" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="6">
+        <TextBlock Text="Select a file" Classes="title" HorizontalAlignment="Center" />
+        <TextBlock Text="Its findings, and a chat about it, will show up here." Classes="muted" HorizontalAlignment="Center" />
+      </StackPanel>
+
+      <!-- Selected file -->
+      <Grid IsVisible="{Binding HasSelection}" RowDefinitions="Auto,Auto,*">
+
+        <!-- Header -->
+        <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" Margin="24,22,24,18" ColumnSpacing="18">
+
+          <Panel Grid.Column="0" Width="68" Height="68">
+            <Ellipse Stroke="{DynamicResource LineBrush}" StrokeThickness="5" Margin="2.5" />
+            <shapes:Arc Width="68" Height="68" StartAngle="-90"
+                        SweepAngle="{Binding SelectedFile.ScoreSweep}"
+                        StrokeThickness="5" StrokeLineCap="Round"
+                        IsVisible="{Binding SelectedFile.HasScore}"
+                        Classes.good="{Binding SelectedFile.IsGood}"
+                        Classes.fair="{Binding SelectedFile.IsFair}"
+                        Classes.poor="{Binding SelectedFile.IsPoor}" />
+            <TextBlock Text="{Binding SelectedFile.ScoreText}" FontSize="20" FontWeight="SemiBold"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                       Classes.good="{Binding SelectedFile.IsGood}"
+                       Classes.fair="{Binding SelectedFile.IsFair}"
+                       Classes.poor="{Binding SelectedFile.IsPoor}" />
+          </Panel>
+
+          <StackPanel Grid.Column="1" Spacing="4" VerticalAlignment="Center">
+            <TextBlock Text="{Binding SelectedFile.Name}" FontSize="18" FontWeight="SemiBold"
+                       TextTrimming="CharacterEllipsis" />
+            <TextBlock Classes="muted tiny mono" TextTrimming="CharacterEllipsis">
+              <Run Text="{Binding SelectedFile.Path}" />
+              <Run Text=" · " />
+              <Run Text="{Binding SelectedFile.LineCountText}" />
+            </TextBlock>
+            <TextBlock Text="{Binding SelectedFile.Summary}" Classes="soft" TextWrapping="Wrap"
+                       Margin="0,4,0,0" IsVisible="{Binding SelectedFile.HasSummary}" />
+          </StackPanel>
+
+          <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6" VerticalAlignment="Top">
+            <Button Classes="ghost icon" Command="{Binding OpenFileCommand}"
+                    ToolTip.Tip="Open this file in its default editor">
+              <PathIcon Data="{x:Static vm:Icons.Document}" Width="16" Height="16" />
+            </Button>
+            <Button Classes="ghost icon" Command="{Binding RevealFileCommand}"
+                    ToolTip.Tip="Show this file in its folder">
+              <PathIcon Data="{x:Static vm:Icons.Folder}" Width="16" Height="16" />
+            </Button>
+            <Button Classes="secondary" Command="{Binding ReanalyzeCommand}"
+                    ToolTip.Tip="Run the analysis on this file again">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <PathIcon Data="{x:Static vm:Icons.Refresh}" Width="14" Height="14" />
+                <TextBlock Text="Run again" />
+              </StackPanel>
+            </Button>
+          </StackPanel>
+        </Grid>
+
+        <!-- Tabs -->
+        <Border Grid.Row="1" Classes="hairline-b" Padding="24,0">
+          <StackPanel Orientation="Horizontal" Spacing="26">
+            <Button Classes="tab" Command="{Binding SetTabCommand}"
+                    CommandParameter="{x:Static vm:DetailTab.Issues}"
+                    Classes.active="{Binding IsIssuesTab}">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock Text="Findings" />
+                <TextBlock Text="{Binding SelectedFile.IssueCount}" Classes="muted"
+                           IsVisible="{Binding SelectedFile.HasIssues}" />
+              </StackPanel>
+            </Button>
+            <Button Classes="tab" Content="Ask about this file"
+                    Command="{Binding SetTabCommand}"
+                    CommandParameter="{x:Static vm:DetailTab.Chat}"
+                    Classes.active="{Binding IsChatTab}" />
+          </StackPanel>
+        </Border>
+
+        <!-- Findings -->
+        <ScrollViewer Grid.Row="2" IsVisible="{Binding IsIssuesTab}">
+          <StackPanel Margin="24,20,24,24" Spacing="12">
+
+            <Border Classes="bubble-error" Padding="14,12" IsVisible="{Binding SelectedFile.Truncated}"
+                    Background="{DynamicResource FairSoftBrush}">
+              <TextBlock Text="This file was longer than the character limit, so only the first part was reviewed. You can raise the limit in Settings."
+                         TextWrapping="Wrap" Classes="small" />
+            </Border>
+
+            <!-- Running / waiting -->
+            <StackPanel Spacing="10" IsVisible="{Binding SelectedFile.IsRunning}" Margin="0,8">
+              <TextBlock Text="Reading this file…" Classes="soft" />
+              <ProgressBar IsIndeterminate="True" />
+            </StackPanel>
+            <TextBlock Text="Waiting its turn in the queue." Classes="muted"
+                       IsVisible="{Binding SelectedFile.IsQueued}" />
+            <TextBlock Text="This file was not analyzed because the run was stopped." Classes="muted"
+                       IsVisible="{Binding SelectedFile.IsSkipped}" />
+
+            <!-- Failed -->
+            <Border Classes="bubble-error" Padding="16" IsVisible="{Binding SelectedFile.IsFailed}">
+              <StackPanel Spacing="8">
+                <TextBlock Text="This file couldn't be analyzed" FontWeight="SemiBold" Classes="poor" />
+                <TextBlock Text="{Binding SelectedFile.Error}" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding SelectedFile.RawResponse}" Classes="muted tiny mono" TextWrapping="Wrap"
+                           MaxHeight="160" IsVisible="{Binding SelectedFile.RawResponse, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+              </StackPanel>
+            </Border>
+
+            <!-- Clean -->
+            <StackPanel Spacing="8" HorizontalAlignment="Center" Margin="0,40" IsVisible="{Binding SelectedFile.IsClean}">
+              <PathIcon Data="{x:Static vm:Icons.Check}" Width="30" Height="30"
+                        Foreground="{DynamicResource GoodBrush}" HorizontalAlignment="Center" />
+              <TextBlock Text="Nothing to flag" Classes="title" HorizontalAlignment="Center" />
+              <TextBlock Text="No leaks, runaway loops, dead code or bad habits turned up in this file."
+                         Classes="muted" TextWrapping="Wrap" TextAlignment="Center" MaxWidth="340" />
+            </StackPanel>
+
+            <!-- Issues -->
+            <TextBlock Text="{Binding SelectedFile.KindSummary}" Classes="muted small"
+                       IsVisible="{Binding SelectedFile.HasIssues}" />
+            <ItemsControl ItemsSource="{Binding SelectedFile.Issues}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate><StackPanel Spacing="10" /></ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                <DataTemplate x:DataType="vm:IssueViewModel">
+                  <Border Background="{DynamicResource SurfaceAltBrush}"
+                          BorderBrush="{DynamicResource LineBrush}" BorderThickness="1"
+                          CornerRadius="10" ClipToBounds="True">
+                    <Grid ColumnDefinitions="3,*">
+                      <Border Grid.Column="0"
+                              Classes.mark-high="{Binding IsHigh}"
+                              Classes.mark-medium="{Binding IsMedium}"
+                              Classes.mark-low="{Binding IsLow}" />
+                      <StackPanel Grid.Column="1" Margin="16,14,16,14" Spacing="9">
+                        <StackPanel Orientation="Horizontal" Spacing="10" Classes="meta">
+                          <!-- What kind of finding this is: bug, vulnerability or code smell -->
+                          <Border Classes="kind" Classes.vuln="{Binding IsVulnerability}"
+                                  CornerRadius="5" Padding="7,3" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal" Spacing="6">
+                              <PathIcon Data="{Binding KindIcon}" Width="12" Height="12" />
+                              <TextBlock Text="{Binding KindLabel}" FontSize="11" FontWeight="SemiBold" />
+                            </StackPanel>
+                          </Border>
+                          <TextBlock Text="{Binding SeverityLabel}" FontSize="11" FontWeight="SemiBold"
+                                     LetterSpacing="0.8"
+                                     Classes.sev-high="{Binding IsHigh}"
+                                     Classes.sev-medium="{Binding IsMedium}"
+                                     Classes.sev-low="{Binding IsLow}" />
+                          <TextBlock Text="{Binding Type}" Classes="muted small" />
+                          <TextBlock Text="·" Classes="muted" IsVisible="{Binding HasLine}" />
+                          <TextBlock Text="{Binding LineText}" Classes="muted small mono" IsVisible="{Binding HasLine}" />
+                        </StackPanel>
+
+                        <TextBlock Text="{Binding Description}" TextWrapping="Wrap" LineHeight="20" />
+
+                        <Border Background="{DynamicResource SunkenBrush}" CornerRadius="8"
+                                Padding="0,6" ClipToBounds="True" IsVisible="{Binding HasSnippet}">
+                          <ItemsControl ItemsSource="{Binding Snippet}">
+                            <ItemsControl.ItemTemplate>
+                              <DataTemplate x:DataType="vm:SnippetLineViewModel">
+                                <Border Classes="code-line" Classes.target="{Binding IsTarget}" Padding="0,1">
+                                  <Grid ColumnDefinitions="48,*">
+                                    <TextBlock Text="{Binding Number}" Classes="code-num muted mono tiny"
+                                               Classes.target="{Binding IsTarget}"
+                                               HorizontalAlignment="Right" Margin="0,0,12,0" VerticalAlignment="Center" />
+                                    <c:CodeText Grid.Column="1" Code="{Binding Text}" Language="{Binding Language}"
+                                                FontFamily="{StaticResource MonoFont}" FontSize="12"
+                                                TextTrimming="CharacterEllipsis" />
+                                  </Grid>
+                                </Border>
+                              </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                          </ItemsControl>
+                        </Border>
+                      </StackPanel>
+                    </Grid>
+                  </Border>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+
+          </StackPanel>
+        </ScrollViewer>
+
+        <!-- Chat -->
+        <Panel Grid.Row="2" IsVisible="{Binding IsChatTab}">
+          <v:ChatView DataContext="{Binding SelectedFile.Chat}" />
+        </Panel>
+
+      </Grid>
+    </Panel>
+  </Border>
+</UserControl>
