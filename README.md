@@ -126,3 +126,7 @@ src/LintelAI/
   Styles/        palette and control styles
 tests/LintelAI.Tests/
 ```
+
+## License
+
+[MIT](LICENSE) © 2026 Crane4
