@@ -4,42 +4,90 @@
              x:Class="LintelAI.Views.WelcomeView"
              x:DataType="vm:MainViewModel">
 
-  <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="460" Spacing="28">
+  <Panel>
 
-    <StackPanel Spacing="14">
-      <TextBlock Classes="heading" TextWrapping="Wrap"
-                 Text="Review a codebase with a model that runs on your own machine." />
-      <TextBlock Classes="soft" TextWrapping="Wrap" LineHeight="21"
-                 Text="Each file is read, checked for leaks, dead code, runaway loops and sloppy habits, then given a score. Nothing is uploaded anywhere." />
+    <!-- Lint -->
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="460" Spacing="28"
+                IsVisible="{Binding IsLintMode}">
+
+      <StackPanel Spacing="14">
+        <TextBlock Classes="heading" TextWrapping="Wrap"
+                   Text="Review a codebase with a model that runs on your own machine." />
+        <TextBlock Classes="soft" TextWrapping="Wrap" LineHeight="21"
+                   Text="Each file is read, checked for leaks, dead code, runaway loops and sloppy habits, then given a score. Nothing is uploaded anywhere." />
+      </StackPanel>
+
+      <Border Classes="panel" Padding="0">
+        <StackPanel>
+          <Grid ColumnDefinitions="56,*" Margin="0,16">
+            <TextBlock Text="01" Classes="muted mono" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <StackPanel Grid.Column="1" Spacing="2">
+              <TextBlock Text="Pick a model" FontWeight="SemiBold" />
+              <TextBlock Classes="muted small" Text="Anything you have pulled into Ollama will show up on the left." />
+            </StackPanel>
+          </Grid>
+          <Border Classes="hairline-b" Height="1" BorderThickness="0,0,0,1" />
+          <Grid ColumnDefinitions="56,*" Margin="0,16">
+            <TextBlock Text="02" Classes="muted mono" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <StackPanel Grid.Column="1" Spacing="2">
+              <TextBlock Text="Choose a project folder" FontWeight="SemiBold" />
+              <TextBlock Classes="muted small" Text="Subfolders are scanned too, minus the usual build output." />
+            </StackPanel>
+          </Grid>
+          <Border Classes="hairline-b" Height="1" BorderThickness="0,0,0,1" />
+          <Grid ColumnDefinitions="56,*" Margin="0,16">
+            <TextBlock Text="03" Classes="muted mono" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <StackPanel Grid.Column="1" Spacing="2">
+              <TextBlock Text="Analyze" FontWeight="SemiBold" />
+              <TextBlock Classes="muted small" Text="Results appear file by file, so you can start reading straight away." />
+            </StackPanel>
+          </Grid>
+        </StackPanel>
+      </Border>
+
     </StackPanel>
 
-    <Border Classes="panel" Padding="0">
-      <StackPanel>
-        <Grid ColumnDefinitions="56,*" Margin="0,16">
-          <TextBlock Text="01" Classes="muted mono" HorizontalAlignment="Center" VerticalAlignment="Center" />
-          <StackPanel Grid.Column="1" Spacing="2">
-            <TextBlock Text="Pick a model" FontWeight="SemiBold" />
-            <TextBlock Classes="muted small" Text="Anything you have pulled into Ollama will show up on the left." />
-          </StackPanel>
-        </Grid>
-        <Border Classes="hairline-b" Height="1" BorderThickness="0,0,0,1" />
-        <Grid ColumnDefinitions="56,*" Margin="0,16">
-          <TextBlock Text="02" Classes="muted mono" HorizontalAlignment="Center" VerticalAlignment="Center" />
-          <StackPanel Grid.Column="1" Spacing="2">
-            <TextBlock Text="Choose a project folder" FontWeight="SemiBold" />
-            <TextBlock Classes="muted small" Text="Subfolders are scanned too, minus the usual build output." />
-          </StackPanel>
-        </Grid>
-        <Border Classes="hairline-b" Height="1" BorderThickness="0,0,0,1" />
-        <Grid ColumnDefinitions="56,*" Margin="0,16">
-          <TextBlock Text="03" Classes="muted mono" HorizontalAlignment="Center" VerticalAlignment="Center" />
-          <StackPanel Grid.Column="1" Spacing="2">
-            <TextBlock Text="Analyze" FontWeight="SemiBold" />
-            <TextBlock Classes="muted small" Text="Results appear file by file, so you can start reading straight away." />
-          </StackPanel>
-        </Grid>
-      </StackPanel>
-    </Border>
+    <!-- Scan -->
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="460" Spacing="28"
+                IsVisible="{Binding IsScanMode}">
 
-  </StackPanel>
+      <StackPanel Spacing="14">
+        <TextBlock Classes="heading" TextWrapping="Wrap"
+                   Text="Check a project before you trust it." />
+        <TextBlock Classes="soft" TextWrapping="Wrap" LineHeight="21"
+                   Text="Found something on GitHub and not sure it's clean? Point this at its folder. It looks for install scripts, hidden downloaders, credential stealers and obfuscated code. Nothing is run, and nothing leaves your computer." />
+      </StackPanel>
+
+      <Border Classes="panel" Padding="0">
+        <StackPanel>
+          <Grid ColumnDefinitions="56,*" Margin="0,16">
+            <TextBlock Text="01" Classes="muted mono" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <StackPanel Grid.Column="1" Spacing="2">
+              <TextBlock Text="Download it, don't open it" FontWeight="SemiBold" />
+              <TextBlock Classes="muted small" TextWrapping="Wrap"
+                         Text="Don't run, build or open the folder in an editor first. Some projects run code the moment you do." />
+            </StackPanel>
+          </Grid>
+          <Border Classes="hairline-b" Height="1" BorderThickness="0,0,0,1" />
+          <Grid ColumnDefinitions="56,*" Margin="0,16">
+            <TextBlock Text="02" Classes="muted mono" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <StackPanel Grid.Column="1" Spacing="2">
+              <TextBlock Text="Choose its folder" FontWeight="SemiBold" />
+              <TextBlock Classes="muted small" Text="Every file is read, including binaries and hidden ones." />
+            </StackPanel>
+          </Grid>
+          <Border Classes="hairline-b" Height="1" BorderThickness="0,0,0,1" />
+          <Grid ColumnDefinitions="56,*" Margin="0,16">
+            <TextBlock Text="03" Classes="muted mono" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <StackPanel Grid.Column="1" Spacing="2">
+              <TextBlock Text="Scan" FontWeight="SemiBold" />
+              <TextBlock Classes="muted small" Text="You get a verdict and the exact lines behind it." />
+            </StackPanel>
+          </Grid>
+        </StackPanel>
+      </Border>
+
+    </StackPanel>
+
+  </Panel>
 </UserControl>

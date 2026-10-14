@@ -120,11 +120,17 @@ public sealed class AppSettings
     public int MaxFileChars { get; set; } = 12000;
     public int TimeoutSeconds { get; set; } = 180;
 
+    /// <summary>Scan level: false is the rules only, true also has the model judge what they found.</summary>
+    public bool AdvancedScan { get; set; }
+
+    /// <summary>How much the advanced scan reads: Quick, Balanced or Thorough.</summary>
+    public string ScanDepth { get; set; } = "Balanced";
+
     /// <summary>Ask GitHub for the newest release number when the app starts. Nothing is downloaded.</summary>
     public bool CheckForUpdates { get; set; } = true;
 
     /// <summary>owner/name of the GitHub repository whose releases are checked.</summary>
-    public string UpdateRepository { get; set; } = "Crane4/lintel-ai";
+    public string UpdateRepository { get; set; } = "Crane4/Lintel-AI";
 
     /// <summary>A version the user chose not to hear about again.</summary>
     public string? SkippedVersion { get; set; }

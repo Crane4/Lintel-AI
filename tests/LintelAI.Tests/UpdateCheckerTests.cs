@@ -128,7 +128,8 @@ public class UpdateCheckerTests
     [Fact]
     public void The_running_version_comes_from_the_build()
     {
-        Assert.Equal(new Version(1, 0, 0), AppInfo.Current);
-        Assert.Equal("1.0.0", AppInfo.CurrentText);
+        // Not pinned to a number, so bumping <Version> for a release doesn't break the suite.
+        Assert.True(AppInfo.Current > new Version(0, 0, 0));
+        Assert.Equal(AppInfo.Current.ToString(3), AppInfo.CurrentText);
     }
 }

@@ -30,7 +30,15 @@ It replaced an earlier Electron version (JS, `main.js` / `renderer/`), which no 
 - **Line numbers are snapped**: small models are often a few lines off, so a finding is moved to
   the nearby line that contains the identifier it names.
 - **`.env`, `.pem`, `.key`, `.pfx` are always skipped**, whatever `.AIIgnore` says.
-- **Update check is notify-only** (GitHub latest release vs `<Version>`); nothing is downloaded.
+- **Updates have two paths.** A copy installed by the Velopack setup updates itself in place
+  (`AppUpdater`, `MainViewModel.Updates.cs`): the banner offers "Update and restart", which
+  downloads only the delta and restarts. Anything else (the old Inno installer, `dotnet run`) is
+  not "installed" for Velopack, so it falls back to the notify-only `UpdateChecker` that links to
+  the release page. The user always presses the button; nothing is applied silently.
+- **A release is made by `scripts/release.ps1`**, not by Inno Setup (`installer/` and
+  `build-installer.ps1` are the legacy path and are kept only for the old v1.0.0 installs).
+  `vpk` is a pinned local tool (`.config/dotnet-tools.json`) and must match the `Velopack`
+  package version in the csproj.
 - **Data folder** is `%AppData%\LintelAI`; the old `AIProjectAnalyzer` folder is migrated once.
 - **Syntax highlighting** is a small regex lexer (`SyntaxHighlighter`), not a parser.
 
@@ -46,17 +54,26 @@ macOS / Linux. The published exe and installer are unsigned (SmartScreen will wa
 
 - Arabic / RTL interface.
 - CI: build, test and publish the installer from a `v*` tag with GitHub Actions.
-- Code signing; automatic updates (Velopack would be the next step).
-- The repository name in `UpdateChecker.AppInfo.DefaultRepository` (`Crane4/lintel-ai`) must
-  match the real GitHub repo, otherwise the update check quietly finds nothing.
+- Code signing. Without it SmartScreen warns on the first install, and `vpk` reports "files will
+  not be signed" (use `--signParams` / `--azureTrustedSignFile` when there is a certificate).
+- **Not verified end to end:** installing with the Velopack Setup and then updating from a real
+  GitHub release. Packaging and launching the portable build were checked; the first real
+  update will be the first real test, so publish a 1.1.0 and then a 1.1.1 to try it.
+- Copies from the old Inno installer cannot update in place; they get the notify-only banner and
+  must install the Velopack Setup once.
+- `AppInfo.DefaultRepository` and `AppSettings.UpdateRepository` are `Crane4/Lintel-AI`; a
+  `settings.json` saved earlier may still say `lintel-ai`, which GitHub treats the same.
 
 ## Handy commands
 
 ```powershell
 dotnet run --project src/LintelAI
 dotnet test
-powershell -ExecutionPolicy Bypass -File scripts/build-installer.ps1
+powershell -ExecutionPolicy Bypass -File scripts/release.ps1            # build only
+$env:GITHUB_TOKEN = '<token, repo scope>'
+powershell -ExecutionPolicy Bypass -File scripts/release.ps1 -Upload    # creates a DRAFT release
 ```
 
-To ship a version: bump `<Version>` in `src/LintelAI/LintelAI.csproj`, build the installer and
-publish a GitHub Release with the same number as the tag (`v1.0.1`).
+To ship a version: bump `<Version>` in `src/LintelAI/LintelAI.csproj` (never reuse one that is
+already released), run `scripts/release.ps1 -Upload`, check the draft on GitHub, then publish it.
+The tag is `v<Version>`. Installed copies see it on their next start.

@@ -22,7 +22,7 @@
         <!-- Header -->
         <Grid Grid.Row="0" ColumnDefinitions="Auto,*,Auto" Margin="24,22,24,18" ColumnSpacing="18">
 
-          <Panel Grid.Column="0" Width="68" Height="68">
+          <Panel Grid.Column="0" Width="68" Height="68" IsVisible="{Binding IsLintMode}">
             <Ellipse Stroke="{DynamicResource LineBrush}" StrokeThickness="5" Margin="2.5" />
             <shapes:Arc Width="68" Height="68" StartAngle="-90"
                         SweepAngle="{Binding SelectedFile.ScoreSweep}"
@@ -59,7 +59,7 @@
                     ToolTip.Tip="Show this file in its folder">
               <PathIcon Data="{x:Static vm:Icons.Folder}" Width="16" Height="16" />
             </Button>
-            <Button Classes="secondary" Command="{Binding ReanalyzeCommand}"
+            <Button Classes="secondary" Command="{Binding ReanalyzeCommand}" IsVisible="{Binding IsLintMode}"
                     ToolTip.Tip="Run the analysis on this file again">
               <StackPanel Orientation="Horizontal" Spacing="8">
                 <PathIcon Data="{x:Static vm:Icons.Refresh}" Width="14" Height="14" />
@@ -81,7 +81,7 @@
                            IsVisible="{Binding SelectedFile.HasIssues}" />
               </StackPanel>
             </Button>
-            <Button Classes="tab" Content="Ask about this file"
+            <Button Classes="tab" Content="Ask about this file" IsVisible="{Binding IsLintMode}"
                     Command="{Binding SetTabCommand}"
                     CommandParameter="{x:Static vm:DetailTab.Chat}"
                     Classes.active="{Binding IsChatTab}" />

@@ -25,19 +25,19 @@
                   CommandParameter="{x:Static vm:FileFilter.All}" Classes.active="{Binding IsFilterAll}" />
           <Button Classes="seg" Content="High" Command="{Binding SetFilterCommand}"
                   CommandParameter="{x:Static vm:FileFilter.High}" Classes.active="{Binding IsFilterHigh}" />
-          <Button Classes="seg" Content="Issues" Command="{Binding SetFilterCommand}"
+          <Button Classes="seg" Content="Issues" Command="{Binding SetFilterCommand}" IsVisible="{Binding IsLintMode}"
                   CommandParameter="{x:Static vm:FileFilter.WithIssues}" Classes.active="{Binding IsFilterIssues}" />
-          <Button Classes="seg" Content="Clean" Command="{Binding SetFilterCommand}"
+          <Button Classes="seg" Content="Clean" Command="{Binding SetFilterCommand}" IsVisible="{Binding IsLintMode}"
                   CommandParameter="{x:Static vm:FileFilter.Clean}" Classes.active="{Binding IsFilterClean}" />
         </StackPanel>
-        <Button Grid.Column="1" Classes="seg" Command="{Binding ToggleSortCommand}"
+        <Button Grid.Column="1" Classes="seg" Command="{Binding ToggleSortCommand}" IsVisible="{Binding IsLintMode}"
                 ToolTip.Tip="Change the sort order">
           <TextBlock Text="{Binding SortLabel}" />
         </Button>
       </Grid>
 
         <!-- Kind filters: press the active one again to clear it -->
-        <StackPanel Orientation="Horizontal" Spacing="2">
+        <StackPanel Orientation="Horizontal" Spacing="2" IsVisible="{Binding IsLintMode}">
           <Button Classes="seg" Command="{Binding ToggleKindFilterCommand}"
                   CommandParameter="{x:Static vm:FileFilter.Vulnerability}"
                   Classes.active="{Binding IsFilterVulnerability}">
@@ -96,6 +96,12 @@
                              IsVisible="{Binding IsSkipped}" />
                   <TextBlock Text="!" Classes="poor" FontSize="15" FontWeight="Bold" HorizontalAlignment="Center"
                              IsVisible="{Binding IsFailed}" />
+                  <!-- security scan results have no score: a severity dot instead -->
+                  <Border Width="10" Height="10" CornerRadius="5" HorizontalAlignment="Center"
+                          IsVisible="{Binding IsUnscored}"
+                          Classes.mark-high="{Binding HasHighIssue}"
+                          Classes.mark-medium="{Binding HasMediumIssue}"
+                          Classes.mark-low="{Binding IsLowOnly}" />
                 </Panel>
 
                 <StackPanel Grid.Column="1" Spacing="1" VerticalAlignment="Center">

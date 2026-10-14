@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using LintelAI.Models;
 using LintelAI.Services;
+using LintelAI.Services.Security.Advanced;
 using Avalonia;
 using Avalonia.Styling;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -189,6 +190,8 @@ public sealed partial class MainViewModel : ObservableObject, IChatHost, IDispos
     public async Task InitializeAsync()
     {
         ApplyTheme();
+        IsAdvancedScan = Settings.AdvancedScan;
+        ScanDepth = Enum.TryParse<AiDepth>(Settings.ScanDepth, out var depth) ? depth : AiDepth.Balanced;
         RestoreLastRun();
         await RefreshModelsAsync();
 
@@ -727,6 +730,9 @@ public sealed partial class MainViewModel : ObservableObject, IChatHost, IDispos
 
     private void LoadEntry(HistoryEntry entry, bool restored)
     {
+        // Saved runs are code reviews, so opening one always returns to that side of the app.
+        Mode = AppMode.Lint;
+        ScanReport = null;
         ResetResults();
 
         FolderPath = entry.Folder;
@@ -840,6 +846,14 @@ public sealed partial class MainViewModel : ObservableObject, IChatHost, IDispos
         IsCheckingUpdates = true;
         try
         {
+            // Installed by the Velopack setup: it can replace itself, so offer that.
+            if (_appUpdater.IsInstalled)
+            {
+                await CheckInPlaceAsync(manual);
+                return;
+            }
+
+            // Anything else (the old installer, "dotnet run"): only point to the release page.
             var result = await _updates.CheckAsync(Settings.UpdateRepository, AppInfo.Current);
 
             switch (result.Status)
@@ -913,6 +927,7 @@ public sealed partial class MainViewModel : ObservableObject, IChatHost, IDispos
     }
 
     [RelayCommand] private void DismissUpdate() => IsUpdateBannerVisible = false;
+    // (updating in place lives in MainViewModel.Updates.cs)
 
     // ═══ Toast ══════════════════════════════════════════════════════════════
 

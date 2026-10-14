@@ -7,8 +7,63 @@
 
   <Grid RowDefinitions="Auto,*" Margin="24,22,24,24" RowSpacing="18">
 
-    <!-- Summary strip -->
-    <Border Grid.Row="0" Classes="panel">
+    <!-- Summary strip: security scan -->
+    <Border Grid.Row="0" Classes="panel" IsVisible="{Binding IsScanMode}">
+      <StackPanel>
+        <Grid ColumnDefinitions="1.8*,Auto,*,Auto,*,Auto,*,Auto,1.2*">
+
+          <StackPanel Grid.Column="0" Margin="22,16" Spacing="4">
+            <TextBlock Classes="eyebrow" Text="VERDICT" />
+            <TextBlock Classes="stat" Text="{Binding VerdictText}"
+                       Classes.good="{Binding IsVerdictClean}"
+                       Classes.fair="{Binding IsVerdictSuspicious}"
+                       Classes.poor="{Binding IsVerdictDangerous}" />
+            <TextBlock Classes="muted small" TextWrapping="Wrap" Text="{Binding VerdictDetail}" />
+          </StackPanel>
+
+          <Border Grid.Column="1" Classes="divider-v" Margin="0,14" />
+
+          <StackPanel Grid.Column="2" Margin="22,16" Spacing="4">
+            <TextBlock Classes="eyebrow" Text="HIGH" />
+            <TextBlock Classes="stat" Text="{Binding ScanHigh}" />
+            <TextBlock Classes="muted small" Text="severity" />
+          </StackPanel>
+
+          <Border Grid.Column="3" Classes="divider-v" Margin="0,14" />
+
+          <StackPanel Grid.Column="4" Margin="22,16" Spacing="4">
+            <TextBlock Classes="eyebrow" Text="MEDIUM" />
+            <TextBlock Classes="stat" Text="{Binding ScanMedium}" />
+            <TextBlock Classes="muted small" Text="severity" />
+          </StackPanel>
+
+          <Border Grid.Column="5" Classes="divider-v" Margin="0,14" />
+
+          <StackPanel Grid.Column="6" Margin="22,16" Spacing="4">
+            <TextBlock Classes="eyebrow" Text="LOW" />
+            <TextBlock Classes="stat" Text="{Binding ScanLow}" />
+            <TextBlock Classes="muted small" Text="severity" />
+          </StackPanel>
+
+          <Border Grid.Column="7" Classes="divider-v" Margin="0,14" />
+
+          <StackPanel Grid.Column="8" Margin="22,16" Spacing="4" VerticalAlignment="Center">
+            <TextBlock Classes="eyebrow" Text="PROJECT" />
+            <TextBlock Text="{Binding FolderName}" FontSize="15" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+            <TextBlock Text="{Binding ScanFilesText}" Classes="muted small" TextTrimming="CharacterEllipsis" />
+          </StackPanel>
+        </Grid>
+
+        <!-- What the scan could not look at -->
+        <Border IsVisible="{Binding HasScanNotice}" Padding="22,10"
+                BorderBrush="{DynamicResource LineBrush}" BorderThickness="0,1,0,0">
+          <TextBlock Text="{Binding ScanNotice}" Classes="muted small" TextWrapping="Wrap" />
+        </Border>
+      </StackPanel>
+    </Border>
+
+    <!-- Summary strip: code review -->
+    <Border Grid.Row="0" Classes="panel" IsVisible="{Binding IsLintMode}">
       <Grid ColumnDefinitions="*,Auto,*,Auto,*,Auto,1.4*">
 
         <StackPanel Grid.Column="0" Margin="22,16" Spacing="4">
@@ -48,10 +103,21 @@
     </Border>
 
     <!-- List + detail -->
-    <Grid Grid.Row="1" ColumnDefinitions="390,16,*">
+    <Grid Grid.Row="1" ColumnDefinitions="390,16,*" IsVisible="{Binding !ShowScanClean}">
       <v:FileListView Grid.Column="0" />
       <v:DetailView Grid.Column="2" />
     </Grid>
+
+    <!-- A scan with nothing to list -->
+    <Border Grid.Row="1" Classes="panel" IsVisible="{Binding ShowScanClean}">
+      <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10" MaxWidth="420">
+        <PathIcon Data="{x:Static vm:Icons.Check}" Width="30" Height="30"
+                  Foreground="{DynamicResource GoodBrush}" HorizontalAlignment="Center" />
+        <TextBlock Text="Nothing suspicious found" Classes="title" HorizontalAlignment="Center" />
+        <TextBlock Classes="muted" TextWrapping="Wrap" TextAlignment="Center"
+                   Text="No install scripts, hidden downloaders, credential stealers or obfuscated code turned up. This is a pattern check, not a guarantee: a careful attacker can avoid known patterns." />
+      </StackPanel>
+    </Border>
 
   </Grid>
 </UserControl>

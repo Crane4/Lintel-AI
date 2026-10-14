@@ -36,6 +36,27 @@ public static partial class JsonExtractor
         return false;
     }
 
+    /// <summary>Finds a single JSON object in a model reply, whatever prose or fences surround it.</summary>
+    public static bool TryParseObject(string? raw, out JsonElement root)
+    {
+        root = default;
+        if (string.IsNullOrWhiteSpace(raw)) return false;
+
+        foreach (var candidate in Candidates(StripThinking(raw).Trim()))
+        {
+            try
+            {
+                using var doc = JsonDocument.Parse(candidate);
+                if (doc.RootElement.ValueKind != JsonValueKind.Object) continue;
+
+                root = doc.RootElement.Clone();
+                return true;
+            }
+            catch (JsonException) { }
+        }
+        return false;
+    }
+
     private static IEnumerable<string> Candidates(string text)
     {
         yield return text;

@@ -91,8 +91,17 @@ public sealed class OllamaClient : IDisposable
         }
     }
 
-    /// <summary>One-shot completion that asks Ollama to constrain the output to valid JSON.</summary>
-    public async Task<string> GenerateJsonAsync(string model, string prompt, TimeSpan timeout, CancellationToken ct = default)
+    /// <summary>
+    /// One-shot completion that asks Ollama to constrain the output to valid JSON. Pass a JSON
+    /// schema to constrain it further (needs a recent Ollama); without one it is plain "json" mode.
+    /// </summary>
+    public async Task<string> GenerateJsonAsync(
+        string model,
+        string prompt,
+        TimeSpan timeout,
+        CancellationToken ct = default,
+        object? schema = null,
+        double temperature = 0.1)
     {
         try
         {
@@ -104,8 +113,8 @@ public sealed class OllamaClient : IDisposable
                 model,
                 prompt,
                 stream = false,
-                format = "json",
-                options = new { temperature = 0.1, num_ctx = ContextLength }
+                format = schema ?? "json",
+                options = new { temperature, num_ctx = ContextLength }
             };
 
             using var response = await SendAsync(

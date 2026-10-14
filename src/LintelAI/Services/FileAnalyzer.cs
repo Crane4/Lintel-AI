@@ -154,7 +154,7 @@ public sealed class FileAnalyzer(OllamaClient ollama)
         }
     }
 
-    private static IReadOnlyList<SnippetLine>? BuildSnippet(IReadOnlyList<string> lines, int? line)
+    internal static IReadOnlyList<SnippetLine>? BuildSnippet(IReadOnlyList<string> lines, int? line)
     {
         if (line is not { } n || n < 1 || n > lines.Count) return null;
 

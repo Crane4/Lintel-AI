@@ -18,7 +18,7 @@
 
   <Window.KeyBindings>
     <KeyBinding Gesture="Escape" Command="{Binding CloseOverlaysCommand}" />
-    <KeyBinding Gesture="F5" Command="{Binding StartCommand}" />
+    <KeyBinding Gesture="F5" Command="{Binding RunCommand}" />
     <KeyBinding Gesture="Ctrl+O" Command="{Binding BrowseCommand}" />
     <KeyBinding Gesture="Ctrl+H" Command="{Binding OpenHistoryCommand}" />
     <KeyBinding Gesture="Ctrl+E" Command="{Binding ToggleExportCommand}" />
@@ -98,6 +98,16 @@
             <TextBlock Text="{Binding UpdateDetail}" Classes="muted small" />
           </StackPanel>
           <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+            <!-- Only for a copy installed by the Velopack setup: downloads the change, then restarts -->
+            <Button Classes="primary" Padding="12,6" Command="{Binding InstallUpdateCommand}"
+                    IsVisible="{Binding CanUpdateInPlace}"
+                    IsEnabled="{Binding !IsInstallingUpdate}"
+                    ToolTip.Tip="Downloads the new version and restarts the app">
+              <StackPanel Orientation="Horizontal" Spacing="8">
+                <PathIcon Data="{x:Static vm:Icons.Refresh}" Width="14" Height="14" />
+                <TextBlock Text="Update and restart" />
+              </StackPanel>
+            </Button>
             <Button Classes="secondary" Padding="12,6" Command="{Binding OpenUpdatePageCommand}"
                     ToolTip.Tip="Opens the release page in your browser">
               <StackPanel Orientation="Horizontal" Spacing="8">
@@ -123,8 +133,8 @@
         </Border>
 
         <Grid Grid.Column="1">
-          <v:WelcomeView IsVisible="{Binding NoResults}" />
-          <v:ResultsView IsVisible="{Binding HasResults}" />
+          <v:WelcomeView IsVisible="{Binding ShowWelcome}" />
+          <v:ResultsView IsVisible="{Binding ShowResults}" />
         </Grid>
       </Grid>
     </Grid>

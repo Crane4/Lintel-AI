@@ -7,7 +7,7 @@ namespace LintelAI.Services;
 public static class AppInfo
 {
     /// <summary>Where releases are published. Forks can point the app elsewhere in settings.json.</summary>
-    public const string DefaultRepository = "Crane4/lintel-ai";
+    public const string DefaultRepository = "Crane4/Lintel-AI";
 
     /// <summary>The version baked into this build (the csproj &lt;Version&gt;), without any commit suffix.</summary>
     public static Version Current { get; } = ReadCurrent();
@@ -119,7 +119,7 @@ public sealed class UpdateChecker : IDisposable
         uri.Scheme == Uri.UriSchemeHttps &&
         (uri.Host == "github.com" || uri.Host.EndsWith(".github.com", StringComparison.Ordinal));
 
-    private static bool IsValidRepository(string repository)
+    public static bool IsValidRepository(string repository)
     {
         var parts = repository.Split('/');
         return parts.Length == 2 && parts.All(p => p.Length > 0 && p.All(c => char.IsLetterOrDigit(c) || c is '-' or '_' or '.'));

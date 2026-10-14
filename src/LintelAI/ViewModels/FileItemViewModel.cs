@@ -66,6 +66,11 @@ public sealed partial class FileItemViewModel : ObservableObject
     public bool HasIssues => Issues.Count > 0;
     public bool IsClean => State == FileState.Done && Issues.Count == 0;
     public bool HasHighIssue => Issues.Any(i => i.IsHigh);
+    public bool HasMediumIssue => !HasHighIssue && Issues.Any(i => i.IsMedium);
+    public bool IsLowOnly => HasIssues && !HasHighIssue && !HasMediumIssue;
+
+    /// <summary>Has findings but no score (security scan results): shown as a severity dot instead.</summary>
+    public bool IsUnscored => !HasScore && HasIssues;
     public bool HasKind(IssueKind kind) => Issues.Any(i => i.Kind == kind);
     public bool HasError => Error is not null;
     public bool HasSummary => !string.IsNullOrWhiteSpace(Summary);
@@ -107,6 +112,7 @@ public sealed partial class FileItemViewModel : ObservableObject
             nameof(IsQueued), nameof(IsRunning), nameof(IsDone), nameof(IsFailed), nameof(IsSkipped),
             nameof(HasScore), nameof(ScoreText), nameof(ScoreSweep),
             nameof(IssueCount), nameof(HasIssues), nameof(IsClean), nameof(HasHighIssue), nameof(IssueCountText),
+            nameof(HasMediumIssue), nameof(IsLowOnly), nameof(IsUnscored),
             nameof(KindSummary)
         })
         {
